@@ -28,30 +28,28 @@ void subMenu()
     printf("_____________________________________________________________\n");
 }
 
-void inicializador(eCliente cliente[], int CANT)
+void inicializador(eCliente cliente[], eAlquiler alquiler[], int CANT)
 {
-    int i;//cliente
-//int j;alquiler
+    int i;//cliente alqui
 
     for(i=0; i<CANT; i++)
     {
         cliente[i].estado = 0;
+        alquiler[i].estado= FINALIZADO;
     }
-    /* for(j=0; j<CANT; j++)
-     {
-         alquiler[i].estado = 0;
-     }*/
 }
 
-void espacioLibre(eCliente cliente[],int CANT)
+int espacioLibre(eCliente cliente[],int CANT)
 {
     int i;
     char aux[9];
+    int valida=0;
 
     printf("\n\t______________Verificando espacio______________");
     printf("\n\n\tIngrese DNI del cliente a cargar: ");
     fflush(stdin);
     gets(aux);
+
     for(i=0; i<CANT; i++)
     {
         if(strcmp(cliente[i].dni,aux)==0)
@@ -64,6 +62,7 @@ void espacioLibre(eCliente cliente[],int CANT)
         else
         {
             printf("\n\tHay espacio\n");
+            valida=1;
         }
         if(i == CANT)
         {
@@ -71,6 +70,7 @@ void espacioLibre(eCliente cliente[],int CANT)
         }
         break;
     }
+    return valida;
 }
 
 void alta(eCliente cliente[], int CANT)
@@ -78,37 +78,42 @@ void alta(eCliente cliente[], int CANT)
     int i;
     char seguir;
 
-    espacioLibre(cliente,CANT);
-    getche();
-    printf("\n\tContinuar con el alta?(s/n): ");
-    fflush(stdin);
-    scanf("%c", &seguir);
-
-    if(seguir == 's')
+    if(espacioLibre(cliente,CANT) == 1)
     {
-        for(i=0; i<CANT; i++)
+        printf("\n\tContinuar con el alta?(s/n): ");
+        fflush(stdin);
+        scanf("%c", &seguir);
+
+        if(seguir == 's')
         {
-            if(cliente[i].estado == 0)
+            for(i=0; i<CANT; i++)
             {
-                printf("\n\tIngrese DNI de cliente: ");
-                fflush(stdin);
-                gets(cliente[i].dni);
+                if(cliente[i].estado == 0)
+                {
+                    system("cls");
+                    printf("\t\t\tALTA\n");
+                    printf("__________________________________________________________________________\n");
+                    printf("\n\tIngrese DNI de cliente: ");
+                    fflush(stdin);
+                    gets(cliente[i].dni);
 
-                printf("\n\tIngrese nombre: ");
-                fflush(stdin);
-                gets(cliente[i].nombre);
+                    printf("\n\tIngrese nombre: ");
+                    fflush(stdin);
+                    gets(cliente[i].nombre);
 
-                printf("\n\tIngrese apellido: ");
-                gets(cliente[i].apellido);
+                    printf("\n\tIngrese apellido: ");
+                    gets(cliente[i].apellido);
 
-                cliente[i].estado = 1;
-                break;
+                    cliente[i].estado = 1;
+                    cliente[i].idCliente= i;
+                    break;
+                }
             }
         }
-    }
-    else
-    {
-        printf("\n\tSe cancela eliminacion\n");
+        else
+        {
+            printf("\n\n\tSe cancela el alta\n");
+        }
     }
 }
 
@@ -117,10 +122,8 @@ void baja(eCliente cliente[], int CANT)
     int i;
     char seguir;
     char aux[9];
-    int dni;
 
-    dni=verificaDNI(cliente,CANT);
-    if(dni ==1)
+    if(verificaDNI(cliente,CANT) == 1)
     {
         printf("\n\tSeguro desea eliminar al cliente?(s/n): ");
         fflush(stdin);
@@ -163,6 +166,11 @@ void listar(eCliente cliente[], int CANT)
             printf("\n\n\t\t__|NOMBRE|____|APELLIDO|____|DNI|_\n");
             printf("\t\t_|%s|____|%s|____|%s|_\n\n",cliente[i].nombre,cliente[i].apellido,cliente[i].dni);
         }
+        else
+        {
+            printf("\n\tNo hay clientes cargados");
+        }
+        break;
     }
 }
 
@@ -172,11 +180,8 @@ void modificar(eCliente cliente[], int CANT)
     char opcion;
     char aux[9];
     char seguir;
-    int dni;
 
-    dni=verificaDNI(cliente,CANT);
-
-    if(dni ==1)
+    if(verificaDNI(cliente,CANT) == 1)
     {
         printf("\n\tContinuar con la modificacion?(s/n): ");
         fflush(stdin);
@@ -227,7 +232,7 @@ int verificaDNI(eCliente cliente[], int CANT)
 {
     int i;
     char aux[9];
-    int dni=0;
+    int valida=0;
 
     printf("\n\t______________Verificando Cliente______________");
     printf("\n\n\tIngrese DNI del cliente: ");
@@ -240,7 +245,7 @@ int verificaDNI(eCliente cliente[], int CANT)
         {
             printf("\n\n\t\t__|NOMBRE|____|APELLIDO|____|DNI|_\n");
             printf("\t\t_|%s|____|%s|____|%s|_\n\n",cliente[i].nombre,cliente[i].apellido,cliente[i].dni);
-            dni=1;
+            valida=1;
         }
         else
         {
@@ -248,24 +253,71 @@ int verificaDNI(eCliente cliente[], int CANT)
         }
         break;
     }
-    return dni;
+    return valida;
 }
 
 
 
+/*
+void validaNumeros()
 
 
 
+void validaLetras()
+{
+int i;
 
 
+ishalpha();
 
-
-
-
-
-
+}
 
 /*
+void nuevoAlquiler(eAlquiler alquiler[], int CANT)
+{
+    int i;
+    char seguir;
+
+    if(alquiler[i] == FINALIZADO)
+    {
+        printf("\n\tContinuar con el alta?(s/n): ");
+        fflush(stdin);
+        scanf("%c", &seguir);
+
+        if(seguir == 's')
+        {
+            for(i=0; i<CANT; i++)
+            {
+                if(alquiler[i].estado == FINALIZADO)
+                {
+                    system("cls");
+                    printf("\t\t\t\NUEVO ALQUILER n");
+                    printf("__________________________________________________________________________\n");
+                    printf("\n\tIngrese DNI de cliente: ");
+                    fflush(stdin);
+                   // gets(alquiler[i]);
+
+                    printf("\n\tIngrese nombre del operador: ");
+                    fflush(stdin);
+                    gets(alquiler[i].operador);
+
+                    printf("\n\tIngrese motivo: ");
+                  //  gets(cliente[i].apellido);
+
+                    alquiler[i].estado = ALQUILADO;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            printf("\n\n\tSe cancela la carga del alquiler\n");
+        }
+    }
+}
+
+
+
 void inicializador(eAlquiler alquiler[],int CANT)
 {
     int i;
@@ -276,16 +328,6 @@ void inicializador(eAlquiler alquiler[],int CANT)
 }
 
 
-
-void Alta
-{
-
-
-}
-
-Baja
-
-Modificar
 
 Nueva llamada
 

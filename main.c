@@ -13,11 +13,11 @@
 int main()
 {
     int opcion;
-    char seguir;
     eCliente cliente[CANT];
-//eAlquiler alquiler[CANT];
+    eAlquiler alquiler[CANT];
 
-    inicializador(cliente,CANT);
+    inicializador(cliente,alquiler,CANT);
+
     do
     {
         system("color 1F");
@@ -27,10 +27,10 @@ int main()
         switch(opcion)
         {
         case 1:
-                system("cls");
-                printf("\t\t\tALTA\n");
-                printf("__________________________________________________________________________\n");
-                alta(cliente,CANT);
+            system("cls");
+            printf("\t\t\tALTA\n");
+            printf("__________________________________________________________________________\n");
+            alta(cliente,CANT);
             break;
         case 2:
             system("cls");
